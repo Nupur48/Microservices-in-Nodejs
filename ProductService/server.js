@@ -25,6 +25,11 @@ class Server {
     this.appConfig();
     this.includeRoutes();
 
+    (async () => {
+      const dbCon = require('./config/db');
+      global.dbs = await dbCon.connect();
+    })();
+
     const port = process.env.NODE_SERVER_POST || 4000;
     const host = process.env.NODE_SERVER_HOST || 'localhost';
 

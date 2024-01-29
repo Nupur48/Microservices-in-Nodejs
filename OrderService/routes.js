@@ -9,7 +9,7 @@ class Routes {
   appRoutes() {
     this.app.post('/order', routeHandler.createOrderRouteHandler);
 
-    this.app.get('/order', routeHandler.getOrdersRouteHandler);
+    this.app.get('/getorder', routeHandler.getOrdersRouteHandler);
 
     this.app.get('*', routeHandler.routeNotFoundHandler);
   }

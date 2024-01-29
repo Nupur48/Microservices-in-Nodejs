@@ -11,9 +11,15 @@
   "author": "Shashank Tiwari",
   "license": "MIT",
   "dependencies": {
+    "@databases/mysql": "^6.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^7.0.0",
     "express": "^4.16.3",
-    "express-http-proxy": "^1.2.0"
+    "express-config": "^0.0.1",
+    "express-http-proxy": "^1.2.0",
+    "mongodb": "^6.3.0",
+    "mysql": "^2.18.1",
+    "response-time": "^2.3.2"
   },
   "devDependencies": {
     "eslint": "^5.16.0",

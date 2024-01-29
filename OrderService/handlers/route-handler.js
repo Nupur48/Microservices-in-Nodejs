@@ -54,6 +54,7 @@ class RouteHandler {
         });
       }
     } catch (error) {
+      console.log(error);
       response.status(CONSTANTS.SERVER_ERROR_HTTP_CODE).json({
         error: true,
         message: CONSTANTS.SERVER_ERROR_MESSAGE,

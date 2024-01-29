@@ -30,7 +30,7 @@ class AppConfig {
 
   loadExpressConfig() {
     new ExpressConfigModule(this.app).setAppEngine();
-    new JWT(this.app).setJWTConfig();
+    //new JWT(this.app).setJWTConfig();
   }
 }
 module.exports = AppConfig;

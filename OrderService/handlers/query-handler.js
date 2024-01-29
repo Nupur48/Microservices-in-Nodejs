@@ -10,7 +10,8 @@ const apiHandler = require('./api-handler');
 class QueryHandler{
 
 	constructor(){
-		this.Mongodb = require("./../config/db");
+		this.collection = "order";
+        this.dbName = "microservice_db";
 		this.projectedKeys = {
 			"date": true,
 			"delivery_date": true,
@@ -31,25 +32,26 @@ class QueryHandler{
 	createOrder(userId, productId) {
 		return new Promise( async (resolve, reject) => {
 			try {
+				let that = this;
 				const serviceResponse = await axios.all([
 					apiHandler.getUserInformation(userId), apiHandler.getProductInformation(productId)
 				]);
-				const userDetail = serviceResponse[0].data;
-				const productDetail = serviceResponse[1].data;
-				if( userDetail.error ) {
+				const userDetail = serviceResponse[0].details;
+				const productDetail = serviceResponse[1].details;
+				if( serviceResponse[0].error === true ) {
 					reject(`User Service is Down or not Working`);
-				} else if (productDetail.error) {
+				} else if (serviceResponse[1].error === true) {
 					reject(`Product Service is Down or not Working`);
 				} else {
 					const orderObject = {
 						date: new Date(Date.now()).toISOString(),
 						delivery_date: new Date(new Date().getTime() + (24 * 60 * 60 * 1000)).toISOString(),
-						product_details: productDetail.details,
-						user_details: userDetail.details
+						product_details: productDetail,
+						user_details: userDetail
 					}
-					const [DB, ObjectID, DBClient] = await this.Mongodb.onConnect();
-					DB.collection('order').insertOne( orderObject , (err, result) => {
-						DBClient.close();
+					global.dbs[that.dbName]
+                    .collection(that.collection)
+					.insertOne( orderObject , (err, result) => {
 						if (err) {
 							reject(err);
 						}
@@ -72,12 +74,13 @@ class QueryHandler{
 	getOrders() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const [DB, ObjectID, DBClient] = await this.Mongodb.onConnect();
-				DB.collection('order').aggregate([{
+				let that = this; 
+				global.dbs[that.dbName]
+                .collection(that.collection)
+				.aggregate([{
 					$project: this.projectedKeys
 				}
 				]).toArray((err, result) => {
-					DBClient.close();
 					if (err) {
 						reject(err);
 					} else {

@@ -12,7 +12,7 @@ class RouteHandler {
       });
     } else {
       try {
-        const userDetails = await helper.getUserDetails(userid.trim());
+        const userDetails = await helper.getUserDetails(userid);
         if (userDetails === undefined) {
           response.status(CONSTANTS.SERVER_NOT_FOUND_HTTP_CODE).json({
             error: true,
@@ -57,7 +57,7 @@ class RouteHandler {
             message: CONSTANTS.USER_LOGIN_FAILED,
           });
         } else {
-          response.status(CONSTANTS.SERVER_NOT_FOUND_HTTP_CODE).json({
+          response.status(CONSTANTS.SERVER_OK_HTTP_CODE).json({
             error: false,
             userId: result,
             message: CONSTANTS.USER_LOGIN_OK,
@@ -122,6 +122,7 @@ class RouteHandler {
           });
         }
       } catch (error) {
+        console.log(error);
         response.status(CONSTANTS.SERVER_NOT_FOUND_HTTP_CODE).json({
           error: true,
           message: CONSTANTS.SERVER_ERROR_MESSAGE,

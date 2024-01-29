@@ -3,11 +3,13 @@
 * @author Shashank Tiwari
 */
 'use strict';
+var ObjectId = require('mongodb').ObjectId;
 
 class QueryHandler{
 
 	constructor(){
-		this.Mongodb = require("./../config/db");
+		this.collection = "product";
+        this.dbName = "microservice_db";
 		this.projectedKeys = {
 			"name": true,
 			"price": true,
@@ -29,16 +31,16 @@ class QueryHandler{
 	getProductDetail(productId) {
 		return new Promise( async (resolve, reject) => {
 			try {
-				const [DB, ObjectID, DBClient] = await this.Mongodb.onConnect();
-				DB.collection('product').aggregate([
+				let that = this;
+				global.dbs[that.dbName]
+                .collection(that.collection).aggregate([
 					{
-						$match: { '_id': ObjectID(productId) }
+						$match: { '_id': ObjectId(productId) }
 					},
 					{
 						$project: this.projectedKeys
 					}
 				]).toArray( (error, result) => {
-					DBClient.close();
 					if( error ){
 						reject(error);
 					}
@@ -63,19 +65,22 @@ class QueryHandler{
 	getProducts() {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const [DB, ObjectID, DBClient] = await this.Mongodb.onConnect();
-				DB.collection('product').aggregate([{
-					$project: this.projectedKeys
-				}
-				]).toArray((err, result) => {
-					DBClient.close();
+				let that = this;
+				const product =global.dbs[that.dbName]
+                .collection(that.collection)
+				.aggregate([{
+					$project: that.projectedKeys
+				    }
+				    ]).toArray((err, result) => {
 					if (err) {
 						reject(err);
 					} else {
+						console.log(result);
 						resolve(result);
 					}
 				});
 			} catch (error) {
+				//console.log(error);
 				reject(error)
 			}
 		});

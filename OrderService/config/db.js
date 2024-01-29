@@ -1,28 +1,22 @@
-const mongodb = require('mongodb');
-const redis = require('redis');
+const MongoClient = require('mongodb').MongoClient;
+const microservice_db = "mongodb://127.0.0.1:27017/login_microservice";
 
-class MongoDB {
-  constructor() {
-    this.mongoClient = mongodb.MongoClient;
-    this.ObjectID = mongodb.ObjectID;
-  }
-
-  onConnect() {
-    return new Promise((resolve, reject) => {
-      this.mongoClient.connect(
-        process.env.MONGODB_DB_URL, {
-          useNewUrlParser: true,
-        },
-        (err, client) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve([client.db('users'), this.ObjectID, client]);
-          }
-        },
-      );
-    });
-  }
+async function getMongoConnections(url, db) {
+  return new Promise((resolve, reject) => {
+    MongoClient.connect(url, function (err, client) {
+      if (err) {
+        console.error(err)
+        return resolve(false);
+      }
+      else {
+        return resolve(client.db(db));
+      }
+    })
+  });
 }
-module.exports.MongoDB = new MongoDB();
-module.exports.redisClient = redis.createClient();
+// module.exports.MongoDB = new MongoDB();
+module.exports.connect = async function () {
+  let dbs = {};
+  dbs.microservice_db = await getMongoConnections(`${microservice_db}`, 'microservice_db');
+  return dbs;
+};

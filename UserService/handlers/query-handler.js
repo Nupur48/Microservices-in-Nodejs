@@ -1,29 +1,35 @@
-const Mongodb = require('./../config/db');
+
+var ObjectId = require('mongodb').ObjectId;
 
 class QueryHandler {
   constructor() {
-    this.Mongodb = Mongodb;
+    this.collection = "users";
+    this.dbName = "microservice_db";
   }
 
   login(data) {
     return new Promise(async (resolve, reject) => {
       try {
-        const [DB, ObjectID, DBClient] = await this.Mongodb.onConnect();
-        DB.collection('user').findOneAndUpdate(
-          data,
-          {
-            $set: {
-              online: 'Y',
-            },
-          },
-          (error, result) => {
-            DBClient.close();
-            if (error) {
-              reject(error);
-            }
-            result.lastErrorObject.updatedExisting ? resolve(result.value._id) : resolve(null);
-          },
-        );
+        let that = this;
+        let query = {
+          name: data.name,
+          password:data.password
+      }
+        global.dbs[that.dbName]
+                    .collection(that.collection)
+                    .find(query).toArray ((err, result) => {
+                        if (err) {
+                            resolve({
+                                success: false,
+                                data: err
+                            });
+                        } else {
+                          resolve({
+                            success: true,
+                            data: result
+                        })
+                        }
+                    });
       } catch (error) {
         reject(error);
       }
@@ -34,33 +40,38 @@ class QueryHandler {
   getUserDetails(userId) {
     return new Promise(async (resolve, reject) => {
       try {
-        const [DB, ObjectID, DBClient] = await this.Mongodb.onConnect();
-        DB.collection('user').aggregate([
-          {
-            $match: { _id: ObjectID(userId) },
-          },
-          {
-            $project: {
-              name: true,
-              email: true,
-              lastname: true,
-              online: true,
-              _id: false,
-              id: '$_id',
+        console.log(userId);
+        let that = this;
+        const db =global.dbs[that.dbName]
+          .collection(that.collection).aggregate([
+            {
+              $match: { _id: ObjectId(userId) },
             },
-          },
-        ]).toArray((error, result) => {
-          DBClient.close();
+            {
+              $project: {
+                name: true,
+                email: true,
+                lastname: true,
+                online: true,
+                _id: false,
+               id: '$_id',
+              },
+            },
+          ]).toArray((error, result) => {
           if (error) {
+            console.log(error)
             reject(error);
           }
           let userDetails = null;
           if (result.length > 0) {
             userDetails = result[0];
           }
+          console.log(userDetails);
           resolve(userDetails);
         });
+       
       } catch (error) {
+        console.log(error);
         reject(error);
       }
     });
@@ -68,15 +79,24 @@ class QueryHandler {
 
   registerUser(data) {
     return new Promise(async (resolve, reject) => {
+      let that = this;
       try {
-        const [DB, ObjectID, DBClient] = await this.Mongodb.onConnect();
-        DB.collection('user').insertOne(data, (err, result) => {
-          DBClient.close();
-          if (err) {
-            reject(err);
-          }
-          resolve(result);
-        });
+        global.dbs[that.dbName]
+                    .collection(that.collection)
+                    .insertOne(data, (err, inserted) => {
+                        if (err) {
+                            resolve({
+                                success: false,
+                                data: err
+                            });
+                        } else {
+                            resolve({
+                                success: true,
+                                data: "User inserted sucessfully",
+                                result: inserted
+                            });
+                        }
+                    });
       } catch (error) {
         reject(error);
       }
