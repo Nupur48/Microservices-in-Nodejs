@@ -19,7 +19,8 @@
     "express-http-proxy": "^1.2.0",
     "mongodb": "^6.3.0",
     "mysql": "^2.18.1",
-    "response-time": "^2.3.2"
+    "response-time": "^2.3.2",
+    "rollbar": "^2.26.2"
   },
   "devDependencies": {
     "eslint": "^5.16.0",

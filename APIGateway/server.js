@@ -3,6 +3,7 @@ const express = require('express');
 const http = require('http');
 const AppConfig = require('./config/app-config');
 
+
 const Routes = require('./routes');
 
 class Server {
@@ -29,9 +30,6 @@ class Server {
       const dbCon = require('./config/db');
       global.dbs = await dbCon.connect();
       global.sql = require('./config/mysql');
-      // const dbConMysql =require('./config/mysql');
-      // var globalsql =  await dbConMysql.getMysqlConnections();
-      // console.log("globaal",globalsql);
     })();
 
     const port = process.env.NODE_SERVER_POST || 8000;
@@ -40,6 +38,7 @@ class Server {
     this.http.listen(port, host, () => {
       console.log(`Listening on http://${host}:${port}`);
     });
+    
   }
 }
 

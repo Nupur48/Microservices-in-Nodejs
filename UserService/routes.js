@@ -22,8 +22,8 @@ class Routes {
 
   /* creating app Routes starts */
   appRoutes() {
-    this.app.post('/register',this.createLogMiddleware, routeHandler.registerRouteHandler);
-    this.app.post('/login', this.createLogMiddleware,routeHandler.loginRouteHandler);
+    // this.app.post('/register',this.createLogMiddleware, routeHandler.registerRouteHandler);
+    // this.app.post('/login', this.createLogMiddleware,routeHandler.loginRouteHandler);
     this.app.get('/user/:userId', this.createLogMiddleware,routeHandler.getUserDetailsHandler);
     this.app.get('*', this.createLogMiddleware,routeHandler.routeNotFoundHandler);
   }
