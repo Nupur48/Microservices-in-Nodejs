@@ -1,6 +1,8 @@
 const MongoClient = require('mongodb').MongoClient;
+const mongoConnString = require('./params');
 
-const microservice_db = "mongodb://127.0.0.1:27017/";
+
+const microservice_db =mongoConnString.mongodb_localhost;
 
 async function getMongoConnections(url, db) {
   try {

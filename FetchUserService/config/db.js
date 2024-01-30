@@ -6,16 +6,15 @@ const microservice_db =mongoConnString.mongodb_localhost;
 
 
 async function getMongoConnections(url, db) {
-  return new Promise((resolve, reject) => {
-    MongoClient.connect(url, function (err, client) {
+  return new Promise((resolve) => {
+    MongoClient.connect(url, function(err, client) {
       if (err) {
-        console.error(err)
+        console.error(err);
         return resolve(false);
-      }
-      else {
+      } else {
         return resolve(client.db(db));
       }
-    })
+    });
   });
 }
 // module.exports.MongoDB = new MongoDB();
