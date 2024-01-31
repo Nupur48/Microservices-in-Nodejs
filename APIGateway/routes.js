@@ -77,7 +77,7 @@ class Routes {
     this.app.get('/user/:userId',this.authMiddleware, this.createLogMiddleware,(req, res) => {
       userServiceProxy(req, res);
     });
-    this.app.get('/searchuser',this.authMiddleware, this.createLogMiddleware,(req, res) => {
+    this.app.post('/searchuser',this.authMiddleware, this.createLogMiddleware,(req, res) => {
       FetchUserServiceProxy(req, res);
     });
   }

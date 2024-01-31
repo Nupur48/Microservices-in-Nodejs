@@ -5,6 +5,9 @@ This project is basic demo of Microservices in Nodejs, Along with API gatway. In
 ## User Service
 This service will implement the User related APIs.
 
+## Fetch User Service
+This service will implement the search user api.
+
 
 
 ## API gateway

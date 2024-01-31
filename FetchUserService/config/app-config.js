@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const ExpressConfigModule = require('./express-config');
 
 
 class AppConfig {
@@ -16,7 +15,6 @@ class AppConfig {
 
   includeConfig() {
     this.loadAppLevelConfig();
-    this.loadExpressConfig();
   }
 
   loadAppLevelConfig() {
@@ -28,9 +26,6 @@ class AppConfig {
     );
   }
 
-  loadExpressConfig() {
-    new ExpressConfigModule(this.app).setAppEngine();
-   // new JWT(this.app).setJWTConfig();
-  }
+
 }
 module.exports = AppConfig;
